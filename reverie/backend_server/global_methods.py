@@ -166,7 +166,8 @@ def check_if_file_exists(curr_file):
   try: 
     with open(curr_file) as f_analysis_file: pass
     return True
-  except: 
+  except Exception as e:
+    print(e) 
     return False
 
 

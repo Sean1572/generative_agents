@@ -118,6 +118,9 @@ class ReverieServer:
     # # e.g., dict[("Adam Abraham", "Zane Xu")] = "Adam: baba \n Zane:..."
     # self.persona_convo = dict()
 
+    # Create the movement server
+    os.mkdir(f"{sim_folder}/movement/")
+
     # Loading in all personas. 
     init_env_file = f"{sim_folder}/environment/{str(self.step)}.json"
     init_env = json.load(open(init_env_file))
@@ -270,9 +273,11 @@ class ReverieServer:
           outfile.write(json.dumps(s_mem, indent=2))
         print_tree(s_mem)
 
-      except:
+      except Exception as e:
+        print(e)
         pass
-
+      
+      print("sleep2 ")
       time.sleep(self.server_sleep * 10)
 
 
@@ -301,11 +306,11 @@ class ReverieServer:
     # So we need to keep track of which event we added. 
     # <game_obj_cleanup> is used for that. 
     game_obj_cleanup = dict()
-
+    print(self.step)
     # The main while loop of Reverie. 
     while (True): 
       # Done with this iteration if <int_counter> reaches 0. 
-      if int_counter == 0: 
+      if int_counter <= 0: 
         break
 
       # <curr_env_file> file is the file that our frontend outputs. When the
@@ -313,6 +318,7 @@ class ReverieServer:
       # new environment file that matches our step count. That's when we run 
       # the content of this for loop. Otherwise, we just wait. 
       curr_env_file = f"{sim_folder}/environment/{self.step}.json"
+      print(curr_env_file, self.step)
       if check_if_file_exists(curr_env_file):
         # If we have an environment file, it means we have a new perception
         # input to our personas. So we first retrieve it.
@@ -321,7 +327,8 @@ class ReverieServer:
           with open(curr_env_file) as json_file:
             new_env = json.load(json_file)
             env_retrieved = True
-        except: 
+        except Exception as e:
+          print(e) 
           pass
       
         if env_retrieved: 
@@ -409,8 +416,10 @@ class ReverieServer:
           int_counter -= 1
           
       # Sleep so we don't burn our machines. 
+      print("sleep", int_counter, int_counter)
       time.sleep(self.server_sleep)
-
+      
+      #input()
 
   def open_server(self): 
     """
