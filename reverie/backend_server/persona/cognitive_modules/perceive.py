@@ -94,6 +94,17 @@ def perceive(persona, maze):
             percept_events_list += [[dist, event]]
             percept_events_set.add(event)
 
+  print(percept_events_set)
+  input()
+  #TODO: ADD SOCIAL MEDIA DECISIONS HERE (?)
+  # QUESTION: WHEN DO YOU DECIDE TO GO ON SOCIAL MEDIA?
+  # ASSUMPTION: I WILL MAKE IT RANDOM FOR NOW, SINCE I NEED MORE HANDS ON THIS
+  # an event of the form s, p, o, desc = p_event
+  # Desc is natural lan description of event
+  # What is s, p, and o?
+  # EX. ('Isabella Rodriguez', 'is', 'sleep', 'sleeping')
+  # (subject, p, o, desc)?
+
   # We sort, and perceive only persona.scratch.att_bandwidth of the closest
   # events. If the bandwidth is larger, then it means the persona can perceive
   # more elements within a small area. 

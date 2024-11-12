@@ -35,6 +35,8 @@ from utils import *
 from maze import *
 from persona.persona import *
 
+from social_media.social_media import SocialMedia
+
 ##############################################################################
 #                                  REVERIE                                   #
 ##############################################################################
@@ -307,6 +309,10 @@ class ReverieServer:
     # <game_obj_cleanup> is used for that. 
     game_obj_cleanup = dict()
     print(self.step)
+
+    ## ADDED SOCIALMEDIA DS
+    media = SocialMedia(f"{sim_folder}/social_media.json")
+
     # The main while loop of Reverie. 
     while (True): 
       # Done with this iteration if <int_counter> reaches 0. 
@@ -385,7 +391,7 @@ class ReverieServer:
             #   @ double studio:double studio:common room:sofa
             next_tile, pronunciatio, description = persona.move(
               self.maze, self.personas, self.personas_tile[persona_name], 
-              self.curr_time)
+              self.curr_time, media)
             movements["persona"][persona_name] = {}
             movements["persona"][persona_name]["movement"] = next_tile
             movements["persona"][persona_name]["pronunciatio"] = pronunciatio

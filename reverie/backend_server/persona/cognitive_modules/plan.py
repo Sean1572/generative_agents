@@ -16,6 +16,9 @@ from persona.prompt_template.run_gpt_prompt import *
 from persona.cognitive_modules.retrieve import *
 from persona.cognitive_modules.converse import *
 
+from social_media.persona import *
+# TODO IMPORT _social_media_react from social_media.persona
+
 ##############################################################################
 # CHAPTER 2: Generate
 ##############################################################################
@@ -928,7 +931,7 @@ def _wait_react(persona, reaction_mode):
     act_pronunciatio, act_obj_description, act_obj_pronunciatio, act_obj_event)
 
 
-def plan(persona, maze, personas, new_day, retrieved): 
+def plan(persona, maze, personas, new_day, retrieved, media, time=None): 
   """
   Main cognitive function of the chain. It takes the retrieved memory and 
   perception, as well as the maze and the first day state to conduct both 
@@ -985,8 +988,16 @@ def plan(persona, maze, personas, new_day, retrieved):
         _chat_react(maze, persona, focused_event, reaction_mode, personas)
       elif reaction_mode[:4] == "wait": 
         _wait_react(persona, reaction_mode)
+      # TODO ADD A SOCIAL MEDIA REACTION HERE!
+      # elif reaction_mode[:12] == "social media":
+      #   _social_media_react(persona, reaction_mode)
       # elif reaction_mode == "do other things": 
       #   _chat_react(persona, focused_event, reaction_mode, personas)
+
+  # Step 2.5:
+  # Spend some time on social media too!
+  # We need to add a system to decide to go on
+  spend_time_on_social_media(persona, media, time, personas, top_k=5) 
 
   # Step 3: Chat-related state clean up. 
   # If the persona is not chatting with anyone, we clean up any of the 
