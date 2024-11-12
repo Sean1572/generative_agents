@@ -80,29 +80,27 @@ def post_interact(post, persona, personas):
         curr_context += "]"
 
     x = run_gpt_generate_comment(persona, personas[post["persona"]], retrieved, curr_context, social_media_message)
-
+    x["utterance"], x["end"]
     print ("adshfoa;khdf;fajslkfjald;sdfa HERE", x)
     input()
+
+    ## TODO FORMAT AS A CONVERSATION
     return x["utterance"], x["end"]
 
 def _react_to_other_post(post_interaction, duration_min_temp, post, persona):
-    pass
+    pass ## TODO IMPLEMENT REACTIONS
 
 def generate_post(persona):
-    # TODO Generate 
+    # TODO Generate a post based on how the user may generate thoughts???
     pass
 
 def _react_to_our_post(post, duration_min_temp, persona):
-    pass
+    pass ## TODO IMPLEMENT REACTIONS
 
 def spend_time_on_social_media(persona, media, time, personas, top_k=5):
     ## Get current state of social media posts (top x)
     last_5_posts = media.get_content()
 
-    # if len(last_5_posts) == 0:
-    #     convo, duration_min = generate_post(persona)
-    #     return True
-    
     ## GENERATE A USER'S INTERACTION WITH SOCIAL MEDIA
     duration_min = 0
     post_interactions = []
@@ -111,7 +109,8 @@ def spend_time_on_social_media(persona, media, time, personas, top_k=5):
             post_interaction, duration_min_temp = post_interact(post, persona, personas)
             post_interactions.append(post_interaction)
             duration_min += duration_min_temp
-
+            
+            ## TODO CREATE A SUMMARY?
             # Question: Should we react to every post?
             _react_to_other_post(post_interaction, duration_min_temp, post, persona)
 
@@ -119,6 +118,10 @@ def spend_time_on_social_media(persona, media, time, personas, top_k=5):
         post, duration_min_temp = generate_post(persona)
         duration_min += duration_min_temp
         _react_to_our_post(post, duration_min_temp, persona)
+    
+    ## THIS SHOULD BE EVERYTHING THAT IS NEEDED
+    
+    ## NOTES
     
     ## PREP FORMATTING TO SAVE ACTIONS INTO PERSONA'S MEMORY
     # act_start_time = persona.scratch.act_start_time
