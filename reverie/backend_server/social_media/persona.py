@@ -14,8 +14,10 @@ from persona.memory_structures.scratch import *
 from persona.cognitive_modules.retrieve import *
 from persona.prompt_template.run_gpt_prompt import *
 from persona.cognitive_modules.converse import *
+from persona.cognitive_modules.reflect import generate_focal_points, generate_insights_and_evidence
 
 def get_history_of_other_persona(user, post, personas):
+    print(personas, post)
     op = personas[post["persona"]]
 
     # BASED ON agent_chat_v2 in converse.py
@@ -63,39 +65,89 @@ def post_interact(post, persona, personas):
     retrieved, social_media_message = get_history_of_other_persona(persona, post, personas)
 
 
-    curr_context = (f"{persona.scratch.name} is on social media " +
-                    f" and saw a post written by {personas[post["persona"]].scratch.name} \n"
-    )
-
+    curr_context = (
+        f"{persona.scratch.name} is on social media " +
+        f" and saw a post written by {personas[post['persona']].scratch.name} \n"
+    )   
+    
     if len(post["comments"]) > 0:
-        curr_context += "There are comments responding to the post written by ["
+        curr_context += "There are comments responding to the post written by the following:"
         for comments in post["comments"]:
-            curr_context += f"{personas[comments["persona"]].scratch.name}",
-        curr_context += "] \n"
+            curr_context += personas[comments["persona"]].scratch.name
+        curr_context += "\n"
 
     if len(post["likes"]) > 0:
         curr_context += "The post was liked by ["
         for pesrona in post["likes"]:
-            curr_context += f"{personas[pesrona].scratch.name}",
+            curr_context += f"{pesrona.scratch.name}",
         curr_context += "]"
 
-    x = run_gpt_generate_comment(persona, personas[post["persona"]], retrieved, curr_context, social_media_message)
-    x["utterance"], x["end"]
-    print ("adshfoa;khdf;fajslkfjald;sdfa HERE", x)
-    input()
+    output = run_gpt_generate_comment(persona, personas[post["persona"]], retrieved, curr_context, social_media_message)
+    
+    print ("COMMENT", output)
+    #input()
 
     ## TODO FORMAT AS A CONVERSATION
-    return x["utterance"], x["end"]
-
-def _react_to_other_post(post_interaction, duration_min_temp, post, persona):
-    pass ## TODO IMPLEMENT REACTIONS
+    return output,0, social_media_message
 
 def generate_post(persona):
-    # TODO Generate a post based on how the user may generate thoughts???
-    pass
+    focal_points = generate_focal_points(persona, 3)
+    # Retrieve the relevant Nodes object for each of the focal points. 
+    # <retrieved> has keys of focal points, and values of the associated Nodes. 
+    retrieved = new_retrieve(persona, focal_points)
+    
+    ## Get some facts about the persona's life and thoughts
+    statements = []
+    insights = []
+    for focal_pt, nodes  in retrieved.items(): 
+        for v in nodes: 
+            statements.append(f"- {v.description})")
+        
+        insights.append(str(generate_insights_and_evidence(persona, nodes, n=5)))
+
+    print("===============PRE GENERATE POST===============")
+    print(statements)
+    print(insights)
+    generated_post, test = run_gpt_generate_post(persona, statements, insights)
+    print(test)
+    print(generated_post)
+    print("===============ENDGENERATE POST===============")
+    return generated_post, 0
+
+
+def _react_to_other_post(post_interaction, duration_min_temp, post, persona):
+    _process_social_media_thoughts(persona, 
+        f"""
+        {persona.scratch.name} saw the following social media thread:
+
+        THREAD START
+        {post}
+        THREAD END
+
+        and in response {persona.scratch.name} added the following comment:
+
+        COMMENT START
+        {post_interaction}
+        COMMENT END
+        """
+    )
 
 def _react_to_our_post(post, duration_min_temp, persona):
-    pass ## TODO IMPLEMENT REACTIONS
+    _process_social_media_thoughts(persona, 
+        f"{persona.scratch.name} made a post on social media and wrote the following: \n {post}"
+    )
+
+def _process_social_media_thoughts(persona, context):
+    thought = context
+    created = persona.scratch.curr_time
+    expiration = persona.scratch.curr_time + datetime.timedelta(days=5)
+    s, p, o = (persona.scratch.name, "interacted", "social media")
+    keywords = set(["social media", "post", "online"])
+    thought_poignancy = generate_poig_score(persona, "event", context)
+    thought_embedding_pair = (thought, get_embedding(thought))
+    persona.a_mem.add_thought(created, expiration, s, p, o, 
+                                thought, keywords, thought_poignancy, 
+                                thought_embedding_pair, None)
 
 def spend_time_on_social_media(persona, media, time, personas, top_k=5):
     ## Get current state of social media posts (top x)
@@ -104,19 +156,21 @@ def spend_time_on_social_media(persona, media, time, personas, top_k=5):
     ## GENERATE A USER'S INTERACTION WITH SOCIAL MEDIA
     duration_min = 0
     post_interactions = []
-    for post in last_5_posts:
+    print("HERE", last_5_posts)
+    #input()
+
+    for id, post in last_5_posts:
         if True: #if does_generate_post(persona, post): #TODO CREATE A DECSION SYSTEM
-            post_interaction, duration_min_temp = post_interact(post, persona, personas)
+            post_interaction, duration_min_temp, social_media_message = post_interact(post, persona, personas)
             post_interactions.append(post_interaction)
-            duration_min += duration_min_temp
             
-            ## TODO CREATE A SUMMARY?
-            # Question: Should we react to every post?
-            _react_to_other_post(post_interaction, duration_min_temp, post, persona)
+            media.write_comment(persona.scratch.name, id, post_interaction, persona.scratch.curr_time)
+            _react_to_other_post(post_interaction, duration_min_temp, social_media_message, persona)
 
     if True: #if does_generate_post(persona, None): #TODO CREATE A DECSION SYSTEM
         post, duration_min_temp = generate_post(persona)
         duration_min += duration_min_temp
+        media.write_post(persona.scratch.name, post, persona.scratch.curr_time)
         _react_to_our_post(post, duration_min_temp, persona)
     
     ## THIS SHOULD BE EVERYTHING THAT IS NEEDED

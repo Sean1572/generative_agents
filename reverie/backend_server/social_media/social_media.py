@@ -19,8 +19,9 @@ class SocialMedia():
             json.dump(self.content, file, indent=2)
 
     def get_content(self):
-        ranking = [(id, content) for content in self.content]
-        return sorted(ranking, key=0)[-5:]
+        ranking = [(post_id, self.content[post_id]) for post_id in self.content.keys()]
+        print(ranking)
+        return sorted(ranking, key=lambda x: x[0])[-5:]
 
     def write_post(self, persona, content, time):
         self.content[str(self.content_count)] = {

@@ -1,4 +1,4 @@
-iterative_convo_v1.txt
+social_media_comment.txt
 
 Variables: 
 !<INPUT 0>! -- persona ISS
@@ -33,14 +33,12 @@ We are online on social media!
 Current Context: 
 !<INPUT 4>!
 
-!<INPUT 5>! and !<INPUT 6>! are chatting. Here is their conversation so far: 
+!<INPUT 5>! is the current user and !<INPUT 6>! is the original poster. 
+
+Here is the current state of the social media thread:
 !<INPUT 7>!
 
 ---
-Task: Given the above, what should !<INPUT 8>! say to !<INPUT 9>! next in the conversation? And did it end the conversation?
+Task: Given the above, what social media comment would !<INPUT 8>! add to this thread started by !<INPUT 9>!?
 
-Output format: Output a json of the following format: 
-{
-"!<INPUT 10>!": "<!<INPUT 11>!'s utterance>",
-"Did the conversation end with !<INPUT 12>!'s utterance?": "<json Boolean>"
-}
+Write the output in the form of a social media comment of appropriate size and style based on who !<INPUT 10>! is and what has been said in the social media thread. 

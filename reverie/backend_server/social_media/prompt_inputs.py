@@ -35,18 +35,18 @@ def run_gpt_generate_comment(init_persona, op_persona, retrieved, curr_context, 
     return prompt_input
 
   def __chat_func_clean_up(gpt_response, prompt=""): 
-    gpt_response = extract_first_json_dict(gpt_response)
+    # gpt_response = extract_first_json_dict(gpt_response)
 
-    cleaned_dict = dict()
-    cleaned = []
-    for key, val in gpt_response.items(): 
-      cleaned += [val]
-    cleaned_dict["utterance"] = cleaned[0]
-    cleaned_dict["end"] = True
-    if "f" in str(cleaned[1]) or "F" in str(cleaned[1]): 
-      cleaned_dict["end"] = False
+    # cleaned_dict = dict()
+    # cleaned = []
+    # for key, val in gpt_response.items(): 
+    #   cleaned += [val]
+    # cleaned_dict["utterance"] = cleaned[0]
+    # cleaned_dict["end"] = True
+    # if "f" in str(cleaned[1]) or "F" in str(cleaned[1]): 
+    #   cleaned_dict["end"] = False
 
-    return cleaned_dict
+    return gpt_response
 
   def __chat_func_validate(gpt_response, prompt=""): 
     print ("ugh...")
@@ -78,6 +78,44 @@ def run_gpt_generate_comment(init_persona, op_persona, retrieved, curr_context, 
   output = ChatGPT_safe_generate_response_OLD(prompt, 3, fail_safe,
                         __chat_func_validate, __chat_func_clean_up, verbose)
   print (output)
+  
+  gpt_param = {"engine": "gpt-3.5-turbo-instruct", "max_tokens": 50, 
+               "temperature": 0, "top_p": 1, "stream": False,
+               "frequency_penalty": 0, "presence_penalty": 0, "stop": None}
+  return output, [output, prompt, gpt_param, prompt_input, fail_safe]
+
+
+## Based on run_gpt_prompts_insight_and_guidance run_gpt_prompt.py
+def run_gpt_generate_post(persona, statements, insights, test_input=None, verbose=False): 
+  def create_prompt_input_for_gen_post(persona, statements, insights, test_input=None): 
+    prompt_input = (f"Here is a list of key points about {persona.scratch.name}'s life \n " +
+      "\n".join(statements)+
+      f"\n Here is a list of key thoughts that {persona.scratch.name}'s has \n "+
+      "\n".join(insights))
+    return [persona.scratch.get_str_iss(), prompt_input, persona.scratch.name, persona.scratch.name]
+
+  def __func_clean_up(gpt_response, prompt=""): 
+    #gpt_response = extract_first_json_dict(gpt_response)
+
+    return gpt_response
+
+  def __chat_func_validate(gpt_response, prompt=""): 
+    try: 
+      __func_clean_up(gpt_response, prompt)
+      return True
+    except:
+      return False 
+
+  def get_fail_safe(): 
+    return "I am hungry"
+
+  prompt_template = "social_media/prompts/social_media_post.txt" 
+  prompt_input = create_prompt_input_for_gen_post(persona, statements, insights) 
+  prompt = generate_prompt(prompt_input, prompt_template)
+  print (prompt)
+  fail_safe = get_fail_safe() 
+  output = ChatGPT_safe_generate_response_OLD(prompt, 3, fail_safe,
+                        __chat_func_validate, __func_clean_up, verbose)
   
   gpt_param = {"engine": "gpt-3.5-turbo-instruct", "max_tokens": 50, 
                "temperature": 0, "top_p": 1, "stream": False,

@@ -95,7 +95,7 @@ def perceive(persona, maze):
             percept_events_set.add(event)
 
   print(percept_events_set)
-  input()
+  #input()
   #TODO: ADD SOCIAL MEDIA DECISIONS HERE (?)
   # QUESTION: WHEN DO YOU DECIDE TO GO ON SOCIAL MEDIA?
   # ASSUMPTION: I WILL MAKE IT RANDOM FOR NOW, SINCE I NEED MORE HANDS ON THIS

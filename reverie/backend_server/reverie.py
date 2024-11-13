@@ -311,7 +311,7 @@ class ReverieServer:
     print(self.step)
 
     ## ADDED SOCIALMEDIA DS
-    media = SocialMedia(f"{sim_folder}/social_media.json")
+    media = SocialMedia(f"{sim_folder}")
 
     # The main while loop of Reverie. 
     while (True): 
