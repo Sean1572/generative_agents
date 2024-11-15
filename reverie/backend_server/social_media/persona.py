@@ -67,7 +67,7 @@ def post_interact(post, persona, personas):
     print(len(social_media_message))
     #input()
 
-    output = run_gpt_generate_comment(persona, personas[post["persona"]], retrieved, social_media_message)
+    output, _ = run_gpt_generate_comment(persona, personas[post["persona"]], retrieved, social_media_message)
     
     print ("COMMENT", output)
     #input()
