@@ -1,8 +1,8 @@
 from persona.prompt_template.run_gpt_prompt import extract_first_json_dict, generate_prompt, ChatGPT_safe_generate_response_OLD
 
 
-def run_gpt_generate_comment(init_persona, op_persona, retrieved, curr_context, curr_chat, test_input=None, verbose=False): 
-  def create_prompt_input_for_comment(init_persona, op_persona, retrieved, curr_context, social_media_thread):
+def run_gpt_generate_comment(init_persona, op_persona, retrieved, curr_chat, test_input=None, verbose=False): 
+  def create_prompt_input_for_comment(init_persona, op_persona, retrieved, social_media_thread):
     persona = init_persona
     # prev_convo_insert = "\n"
     # if persona.a_mem.seq_chat: 
@@ -73,7 +73,7 @@ def run_gpt_generate_comment(init_persona, op_persona, retrieved, curr_context, 
 
   print ("11")
   prompt_template = "social_media/prompts/social_media_comment.txt" 
-  prompt_input = create_prompt_input_for_comment(init_persona, op_persona, retrieved, curr_context, curr_chat) 
+  prompt_input = create_prompt_input_for_comment(init_persona, op_persona, retrieved, curr_chat) 
   print ("22")
   print(len(prompt_input))
   prompt = generate_prompt(prompt_input, prompt_template)

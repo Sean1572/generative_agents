@@ -20,5 +20,5 @@ Task: !<INPUT 2>! wishes to make a post to social media online!
 The above context provides the facts and thoughts about thier life.
 
 Write an post for social media that !<INPUT 3>! would likely say given who they are and the context they are making the post in.
-The length of the post should be appropriate for a social media platform. 
+The length of the post should be appropriate for a social media platform.
 ---

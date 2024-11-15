@@ -67,7 +67,7 @@ def post_interact(post, persona, personas):
     print(len(social_media_message))
     #input()
 
-    output = run_gpt_generate_comment(persona, personas[post["persona"]], retrieved, curr_context, social_media_message)
+    output = run_gpt_generate_comment(persona, personas[post["persona"]], retrieved, social_media_message)
     
     print ("COMMENT", output)
     #input()
@@ -154,13 +154,15 @@ def spend_time_on_social_media(persona, media, time, personas, top_k=5):
             post_interaction, duration_min_temp, social_media_message = post_interact(post, persona, personas)
             post_interactions.append(post_interaction)
             
-            media.write_comment(persona.scratch.name, id, post_interaction, persona.scratch.curr_time)
+            media.write_comment(persona.scratch.name, id, post_interaction, str(persona.scratch.curr_time))
+            media.save()
             _react_to_other_post(post_interaction, duration_min_temp, social_media_message, persona)
 
     if True: #if does_generate_post(persona, None): #TODO CREATE A DECSION SYSTEM
         post, duration_min_temp = generate_post(persona)
         duration_min += duration_min_temp
-        media.write_post(persona.scratch.name, post, persona.scratch.curr_time)
+        media.write_post(persona.scratch.name, post, str(persona.scratch.curr_time))
+        media.save()
         _react_to_our_post(post, duration_min_temp, persona)
     
     ## THIS SHOULD BE EVERYTHING THAT IS NEEDED
