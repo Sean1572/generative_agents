@@ -4,41 +4,26 @@ Variables:
 !<INPUT 0>! -- persona ISS
 !<INPUT 1>! -- persona name
 !<INPUT 2>! -- retrieved memory
-!<INPUT 3>! -- past context
-!<INPUT 4>! -- current context
+!<INPUT 3>! -- Social Media Context
+!<INPUT 4>! -- persona name
 !<INPUT 5>! -- persona name
-!<INPUT 6>! -- target persona name
-!<INPUT 7>! -- curr convo
-!<INPUT 8>! -- persona name
-!<INPUT 9>! -- target persona name
-!<INPUT 10>! -- persona name
-!<INPUT 11>! -- persona name
-!<INPUT 12>! -- persona name
+
 <commentblockmarker>###</commentblockmarker>
 Context for the task: 
 
-PART 1. 
+Information about the person about to comment:
 !<INPUT 0>!
 
 Here is the memory that is in !<INPUT 1>!'s head: 
 !<INPUT 2>!
 
-PART 2. 
-Past Context: 
+The social media thread:
 !<INPUT 3>!
 
-Current Location:
-We are online on social media!
-
-Current Context: 
-!<INPUT 4>!
-
-!<INPUT 5>! is the current user and !<INPUT 6>! is the original poster. 
-
-Here is the current state of the social media thread:
-!<INPUT 7>!
-
 ---
-Task: Given the above, what social media comment would !<INPUT 8>! add to this thread started by !<INPUT 9>!?
+Task: !<INPUT 4>! wishes to make a comment to this post they saw on social media!
 
-Write the output in the form of a social media comment of appropriate size and style based on who !<INPUT 10>! is and what has been said in the social media thread. 
+The above context provides the facts and thoughts about thier life.
+
+Write an post for social media that !<INPUT 5>! would likely say given who they are and the context they are making the post in.
+The length of the post should be appropriate for a social media platform. 

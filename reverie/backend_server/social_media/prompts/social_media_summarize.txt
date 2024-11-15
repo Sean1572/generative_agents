@@ -1,0 +1,14 @@
+social_media_comment.txt
+
+Variables: 
+
+!<INPUT 0>! -- Social Media Context
+
+<commentblockmarker>###</commentblockmarker>
+ 
+Here is a description of some activity on social media:
+
+!<INPUT 0>!
+
+---
+Task: Given the above, summarize the thread on social media. Be sure to maintain the names of who posted/comment what. 

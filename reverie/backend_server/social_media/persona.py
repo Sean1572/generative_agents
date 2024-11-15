@@ -22,7 +22,7 @@ def get_history_of_other_persona(user, post, personas):
 
     # BASED ON agent_chat_v2 in converse.py
     focal_points = [f"{op.scratch.name}"]
-    retrieved = new_retrieve(user, focal_points, 50)
+    retrieved = new_retrieve(user, focal_points, 5)
     relationship = generate_summarize_agent_relationship(user, op, retrieved)
 
     social_media_message = f"""
@@ -39,7 +39,7 @@ def get_history_of_other_persona(user, post, personas):
     for comments in post["comments"]:
         op_commenter = personas[comments["persona"]]
         focal_points = [f"{op_commenter.scratch.name}"]
-        retrieved = new_retrieve(user, focal_points, 50)
+        retrieved = new_retrieve(user, focal_points, 5)
         relationship = generate_summarize_agent_relationship(user, op_commenter, retrieved)
 
         social_media_message += f"""
@@ -53,7 +53,7 @@ def get_history_of_other_persona(user, post, personas):
                     social_media_message]
     
     # TODO: ADD LIKES
-    retrieved = new_retrieve(user, focal_points_main, 30)
+    retrieved = new_retrieve(user, focal_points_main, 1)
     return retrieved, social_media_message
 
 def does_genearte_post(persona, post=None):
@@ -64,23 +64,8 @@ def post_interact(post, persona, personas):
     # BASED ON agent_chat_v2 in converse.py
     retrieved, social_media_message = get_history_of_other_persona(persona, post, personas)
 
-
-    curr_context = (
-        f"{persona.scratch.name} is on social media " +
-        f" and saw a post written by {personas[post['persona']].scratch.name} \n"
-    )   
-    
-    if len(post["comments"]) > 0:
-        curr_context += "There are comments responding to the post written by the following:"
-        for comments in post["comments"]:
-            curr_context += personas[comments["persona"]].scratch.name
-        curr_context += "\n"
-
-    if len(post["likes"]) > 0:
-        curr_context += "The post was liked by ["
-        for pesrona in post["likes"]:
-            curr_context += f"{pesrona.scratch.name}",
-        curr_context += "]"
+    print(len(social_media_message))
+    #input()
 
     output = run_gpt_generate_comment(persona, personas[post["persona"]], retrieved, curr_context, social_media_message)
     
@@ -143,6 +128,10 @@ def _process_social_media_thoughts(persona, context):
     expiration = persona.scratch.curr_time + datetime.timedelta(days=5)
     s, p, o = (persona.scratch.name, "interacted", "social media")
     keywords = set(["social media", "post", "online"])
+
+    print(len(context))
+    #input()
+
     thought_poignancy = generate_poig_score(persona, "event", context)
     thought_embedding_pair = (thought, get_embedding(thought))
     persona.a_mem.add_thought(created, expiration, s, p, o, 
@@ -160,6 +149,7 @@ def spend_time_on_social_media(persona, media, time, personas, top_k=5):
     #input()
 
     for id, post in last_5_posts:
+        social_media_message = ""
         if True: #if does_generate_post(persona, post): #TODO CREATE A DECSION SYSTEM
             post_interaction, duration_min_temp, social_media_message = post_interact(post, persona, personas)
             post_interactions.append(post_interaction)
