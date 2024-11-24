@@ -16,6 +16,12 @@ from persona.prompt_template.run_gpt_prompt import *
 from persona.cognitive_modules.converse import *
 from persona.cognitive_modules.reflect import generate_focal_points, generate_insights_and_evidence
 
+"""
+The retrival strategies used here are based on simliar ideas found in 
+reverie\backend_server\persona\cognitive_modules
+from the original geneartive_agents created by park et al. 
+"""
+
 def get_history_of_other_persona(user, post, personas):
     print(personas, post)
     op = personas[post["persona"]]
