@@ -1,5 +1,9 @@
 from persona.prompt_template.run_gpt_prompt import extract_first_json_dict, generate_prompt, ChatGPT_safe_generate_response_OLD
-
+"""
+The following code is based on the implementations for running the GPT found in 
+reverie\backend_server\persona\prompt_template\gpt_structure.py 
+from the original impelentation of generative_agents by park et al. 
+"""
 
 def run_gpt_generate_comment(init_persona, op_persona, retrieved, curr_chat, test_input=None, verbose=False): 
   def create_prompt_input_for_comment(init_persona, op_persona, retrieved, social_media_thread):
