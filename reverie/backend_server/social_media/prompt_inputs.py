@@ -3,6 +3,9 @@ from persona.prompt_template.run_gpt_prompt import extract_first_json_dict, gene
 The following code is based on the implementations for running the GPT found in 
 reverie\backend_server\persona\prompt_template\gpt_structure.py 
 from the original impelentation of generative_agents by park et al. 
+
+This includes the prompt templates found in reverie\backend_server\persona\prompt_template, so of which was used to create
+the templates found in reverie\backend_server\social_media\prompts
 """
 
 def run_gpt_generate_comment(init_persona, op_persona, retrieved, curr_chat, test_input=None, verbose=False): 
