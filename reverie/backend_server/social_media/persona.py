@@ -128,6 +128,7 @@ def _react_to_our_post(post, duration_min_temp, persona):
         f"{persona.scratch.name} made a post on social media and wrote the following: \n {post}"
     )
 
+# based on run_reflect in backend_server/persona/cognitive_modules/reflect.py
 def _process_social_media_thoughts(persona, context):
     thought = context
     created = persona.scratch.curr_time
