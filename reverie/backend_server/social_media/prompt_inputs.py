@@ -7,7 +7,7 @@ from the original impelentation of generative_agents by park et al.
 This includes the prompt templates found in reverie\backend_server\persona\prompt_template, so of which was used to create
 the templates found in reverie\backend_server\social_media\prompts
 """
-
+## Based on run_gpt_prompts_insight_and_guidance run_gpt_prompt.py
 def run_gpt_generate_comment(init_persona, op_persona, retrieved, curr_chat, test_input=None, verbose=False): 
   def create_prompt_input_for_comment(init_persona, op_persona, retrieved, social_media_thread):
     persona = init_persona
